@@ -1,0 +1,126 @@
+<div class="tasks-page">
+  <!-- Page Title -->
+  <div class="page-header">
+    <div>
+      <h1>Tasks</h1>
+      <p class="page-subtitle">{{ tasks.length }} task{{ tasks.length !== 1 ? 's' : '' }} found</p>
+    </div>
+  </div>
+
+  <!-- Filters Bar -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>Filter by Status</label>
+      <select [(ngModel)]="filterStatus" (change)="onFilterChange()">
+        <option value="">All Statuses</option>
+        <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Filter by Assignee</label>
+      <select [(ngModel)]="filterAssigneeId" (change)="onFilterChange()">
+        <option value="">All Assignees</option>
+        <option *ngFor="let u of users" [value]="u.id">{{ u.fullName }}</option>
+      </select>
+    </div>
+    <button class="btn btn-secondary btn-sm" (click)="clearFilters()">Clear Filters</button>
+    <button class="btn btn-secondary btn-sm" (click)="loadTasks()">↻ Refresh</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="alert alert-info" *ngIf="infoMessage">{{ infoMessage }}</div>
+
+  <!-- Main layout: side-by-side -->
+  <div class="main-layout">
+    <!-- Left: Task List -->
+    <div class="list-panel">
+      <div class="loading-overlay" *ngIf="loading">
+        <div class="spinner-large"></div>
+        <p>Loading tasks...</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && tasks.length === 0">
+        <div class="empty-icon">📋</div>
+        <h3>No tasks found</h3>
+        <p>Create your first task using the form on the right.</p>
+      </div>
+
+      <div class="task-table-wrapper" *ngIf="!loading && tasks.length > 0">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th (click)="onSortChange('title')" class="sortable">
+                Title {{ getSortIcon('title') }}
+              </th>
+              <th (click)="onSortChange('status')" class="sortable">
+                Status {{ getSortIcon('status') }}
+              </th>
+              <th (click)="onSortChange('assignee')" class="sortable">
+                Assignee {{ getSortIcon('assignee') }}
+              </th>
+              <th (click)="onSortChange('dueDate')" class="sortable">
+                Due Date {{ getSortIcon('dueDate') }}
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let task of tasks"
+              [class.row-selected]="selectedTask?.id === task.id"
+              (click)="onEditTask(task)"
+              class="task-row">
+              <td class="task-title-cell">
+                <span class="task-title">{{ task.title }}</span>
+                <span class="task-desc" *ngIf="task.description">{{ task.description }}</span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(task.status)">
+                  {{ task.statusLabel }}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="task.assigneeName" class="assignee-chip">
+                  {{ task.assigneeName }}
+                </span>
+                <span *ngIf="!task.assigneeName" class="no-assignee">—</span>
+              </td>
+              <td>
+                <span *ngIf="task.dueDate" [class.overdue]="task.dueDate < today()">
+                  {{ task.dueDate | date:'MMM d, y' }}
+                </span>
+                <span *ngIf="!task.dueDate" class="no-assignee">—</span>
+              </td>
+              <td class="actions-cell" (click)="$event.stopPropagation()">
+                <button
+                  class="btn-icon btn-edit"
+                  title="Edit"
+                  (click)="onEditTask(task)">✏️</button>
+                <button
+                  *ngIf="deleteConfirmId !== task.id"
+                  class="btn-icon btn-delete"
+                  title="Delete"
+                  (click)="confirmDelete(task.id)">🗑️</button>
+                <ng-container *ngIf="deleteConfirmId === task.id">
+                  <button class="btn btn-danger btn-xs" (click)="onDeleteTask(task.id)">Confirm</button>
+                  <button class="btn btn-secondary btn-xs" (click)="cancelDelete()">Cancel</button>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div class="form-panel">
+      <app-task-form
+        [editTask]="selectedTask"
+        [users]="users"
+        (taskSaved)="onTaskSaved($event)"
+        (formCancelled)="onFormCancelled()">
+      </app-task-form>
+    </div>
+  </div>
+</div>

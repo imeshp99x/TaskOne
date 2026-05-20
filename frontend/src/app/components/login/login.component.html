@@ -1,0 +1,56 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <span class="logo-icon">✓</span>
+      </div>
+      <h1>Task Management</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group" [class.has-error]="f.username.invalid && f.username.touched">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          placeholder="Enter your username"
+          autocomplete="username"
+        />
+        <span class="error-text" *ngIf="f.username.invalid && f.username.touched">
+          <ng-container *ngIf="f.username.errors?.required">Username is required.</ng-container>
+          <ng-container *ngIf="f.username.errors?.minlength">At least 2 characters required.</ng-container>
+        </span>
+      </div>
+
+      <div class="form-group" [class.has-error]="f.password.invalid && f.password.touched">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+        />
+        <span class="error-text" *ngIf="f.password.invalid && f.password.touched">
+          <ng-container *ngIf="f.password.errors?.required">Password is required.</ng-container>
+          <ng-container *ngIf="f.password.errors?.minlength">At least 4 characters required.</ng-container>
+        </span>
+      </div>
+
+      <div class="alert alert-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full" [disabled]="loading">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <div class="login-hint">
+      <p>Default credentials: <strong>admin / Admin@123</strong></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+.task-form-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  height: 100%;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f3f4f6;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  .mode-badge {
+    font-size: 0.78rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 500;
+
+    &.edit-badge {
+      background: #fff7ed;
+      color: #ea580c;
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+
+  .btn {
+    flex: 1;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}

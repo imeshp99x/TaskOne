@@ -1,0 +1,13 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="brand-icon">✓</span>
+    <span class="brand-text">Task Management</span>
+  </div>
+  <div class="navbar-user" *ngIf="currentUser">
+    <span class="user-avatar">{{ currentUser.fullName.charAt(0).toUpperCase() }}</span>
+    <span class="user-name">{{ currentUser.fullName }}</span>
+    <button class="btn-logout" (click)="logout()" title="Sign out">
+      <span>Sign Out</span>
+    </button>
+  </div>
+</nav>
